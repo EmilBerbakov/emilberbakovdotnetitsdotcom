@@ -4,11 +4,12 @@
 
 For those of you who have been keeping an eye on this site, you may have noticed that there have not been many updates, recently. Fear not; I have not abandoned my website, nor have I lost my new-found passion for web-design and app development.
 The first version of my website used the following languages:
--PHP
--HTML
--Javascript
--CSS
--SQL
+- PHP
+- HTML
+- Javascript
+- CSS
+- SQL
+
 For all of these languages besides CSS, I developed the original site using the vanilla versions. 
 I did that deliberately; I wanted to prove that I could develop my own website and web apps without relying on any pre-existing foundations. Now that I have shown that I can do this without using any sort of help, I decided that I should do this all again, except using more industry standard approaches.
 What do I mean by industry standard in this case? Well, I mean that I want to use frameworks and practices found in professional web development and implement them for this project. What this means is taking a full stack approach to web development. The framework I'm using for my updated website is ASP.NET CORE. This is a framework developed by Microsoft, and is one of the more common frameworks used for web design. In short, using this framework allows me to partition my website and applications more cleanly into three main pieces, using specific programing languages to make them. These pieces (or layers) are:
@@ -20,10 +21,13 @@ PHP is the real workhorse of the current (soon-to-be-retirned) version of my web
 At a professional level, PHP is used as a middle-ware language more than how I am currently using it as a mix between front-and-middle-end.
 Using PHP as heavily as I have for this version of the site resulted in a large amount of PHP fragments that I staple together to make up a singular webpage.
 My new website uses the following languages:
--Javascript
--CSS
--HTML
--C#
--SQL
+- Javascript
+- CSS
+- HTML
+- C#
+- SQL
+
 I may yet find some use out of PHP again.  For instance, I'm thinking to use it to transition current users from the old PHP login method to the C# API through an emailed code.
 Keep an eye out for the relaunch of my website. It's coming along nicely, and I'm very proud of it, even more-so than this current site.
+
+Soon enough, I will welcome you all to emilberbakov .NET.  It's dot com!
