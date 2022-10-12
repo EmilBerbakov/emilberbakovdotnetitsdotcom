@@ -27,33 +27,35 @@ var requestOptions = {
             sessionStorage.setItem("Error","There was an error with your credentials.  Please try again.");
             
         }
+        //this is where I'm hitting.  Look into this tomorrow.
         else if (result="3"){
             sessionStorage.clear();
             sessionStorage.setItem("Error","Credentials Expired.  Please log in again.");
         }
         //return result;
+        switch(result){
+            case "2":
+            case "3":
+            case "0":
+                window.location.replace("/home");
+                break;
+            default:
+                //console.log("eee");
+                result=res.text();
+                props.setItem({resultArray:JSON.parse(result)});
+                myLibrary(props);
+                //here we will point to the table constructor function
+                break;
+        };
+        
     }
     catch{
         sessionStorage.clear();
         sessionStorage.setItem("Error","There was an unforseen error.  Please try again.");
-        let result = "0";
+        window.location.replace("/home")
         //return result;
     }
-    switch(result){
-        case "2":
-        case "3":
-        case "0":
-            window.location.replace("/home");
-            break;
-        default:
-            //console.log("eee");
-            result=res.text();
-            props.setItem({resultArray:JSON.parse(result)});
-            myLibrary(props);
-            //here we will point to the table constructor function
-            break;
-    };
-    
+
  }
 
 
@@ -65,11 +67,11 @@ export class Profile extends Component {
         this.componentDidUpdate=this.componentDidUpdate.bind(this);
     }
     componentDidMount() {
-        result=validate(requestOptions,props);
+         var result=validate(requestOptions,this.state);
      }
 
      componentDidUpdate(){
-        result=validate(requestOptions,props)
+        var result=validate(requestOptions,this.state);
      }
 
   render() {
