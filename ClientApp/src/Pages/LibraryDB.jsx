@@ -1,7 +1,8 @@
 import React,{useState} from 'react';
-import { Button,Collapse,Table,Form,Dropdown,DropdownButton,Row,Col, Container} from 'react-bootstrap';
+import { Button,Collapse,Table,Form,Dropdown,DropdownButton,Row,Col} from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 import PageAnimation from './PageAnimation';
+import { OwnershipDropDown,ReadDropDown } from '../pagecomponents/LibraryEditButtons';
 const TITLE='Library Database';
 
 class LibraryDB extends React.Component{
@@ -60,6 +61,7 @@ class LibraryDB extends React.Component{
         
         <Helmet>
         <title>{TITLE}</title>
+
         </Helmet>
         <PageAnimation>
         <Intro props={this.state}/>
@@ -145,10 +147,12 @@ function Intro(props){
 }
 
 function LibraryDBResults(props){
+const jwt=sessionStorage.getItem("JWT")
 Intro(props);
 //console.log(props.props.max)
 if (props.props.resultArray.length>0 && props.props.resultArray[0]!=='No results found'){
     //use conditional rendering to add the user account buttons
+    console.log(props.props.resultArray)
     let tb_data = props.props.resultArray.map((book)=>{
         return(
             <tr key={book.EDITION_ID}>
@@ -158,18 +162,22 @@ if (props.props.resultArray.length>0 && props.props.resultArray[0]!=='No results
                 <td>{book.INFO.ISBN_13}</td>
                 <td>{book.INFO.ISBN_10}</td>
                 <td>{book.INFO.AUTHOR_NAMES}</td>
+                {jwt!==null && typeof jwt!=="undefined" && <><OwnershipDropDown BookID={book.EDITION_ID}/><ReadDropDown BookID={book.EDITION_ID}/></>}
             </tr>
         )
     })
     return(
-        <div>
-            <Table variant='dark' responsive>
+        <>
+        <div className='table-responsive-sm'>
+            <Table variant='dark'>
                 <thead>
                 <tr>
                     <th>Title</th>
                     <th>ISBN-13</th>
                     <th>ISBN-10</th>
                     <th>Authors&#40;s&#41;</th>
+                    {jwt!==null && typeof jwt!=="undefined" &&<><th>Ownership Status</th><th>Read Status</th></>}
+                    
                 </tr>
                 </thead>
                 <tbody>
@@ -177,6 +185,7 @@ if (props.props.resultArray.length>0 && props.props.resultArray[0]!=='No results
                 </tbody>
             </Table>
         </div>
+        </>
     )
 }
 else{

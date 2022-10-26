@@ -4,7 +4,6 @@ import React from "react";
 
 class LoginForm extends React.Component{
 handleLogin = async (event)=>{
-    //login api post here; in this test example, it's running this as soon as we click on the login to expand
     event.preventDefault();
     const email=document.getElementById('emailentry').value;
     const password=document.getElementById('passwordentry').value;
@@ -40,6 +39,8 @@ handleLogin = async (event)=>{
       else{
         sessionStorage.clear();
         sessionStorage.setItem("JWT",result);
+        sessionStorage.setItem("Payload",jwtPayload(result));
+
       }
       window.location.reload();
       //console.log(result);
@@ -91,6 +92,11 @@ return(
 </>
 )
 }
+}
+
+function jwtPayload(t) {
+  let payload=window.atob(t.split('.')[1]);
+  return (payload)
 }
 
 

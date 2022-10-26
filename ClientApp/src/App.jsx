@@ -1,5 +1,5 @@
 
-import {Container,Nav,Navbar,NavDropdown} from 'react-bootstrap';
+import {Container,Nav,Navbar,NavDropdown, ToastContainer} from 'react-bootstrap';
 import{Routes,Route} from 'react-router-dom';
 //import useLocalStorage from 'use-local-storage';
 import Home from './Pages/Home';
@@ -14,6 +14,8 @@ import { useLocation } from 'react-router-dom';
 import LoginForm from "./pagecomponents/LoginForm";
 import ErrorToast from './pagecomponents/ErrorToast';
 import Profile from './Pages/Profile';
+import MyLibrary from './Pages/MyLibrary';
+
 
   {/*
   function Heading(){
@@ -43,6 +45,7 @@ class App extends React.Component {
   componentDidMount(){
     jwt=sessionStorage.getItem("JWT");
     error=sessionStorage.getItem("Error");
+    console.log(jwt);
   }
 
   componentDidUpdate(){
@@ -58,7 +61,9 @@ handleLogout = async (event)=>{
 
   
 render(){
+  let payloadjson=JSON.parse(sessionStorage.getItem("Payload"))
   return(
+    <>
     <div className='app'>
       
         {/*
@@ -74,7 +79,7 @@ render(){
             <Container fluid>
             {jwt===null && <Navbar.Brand><strong>EmilBerbakov.com</strong></Navbar.Brand>}
             {typeof jwt==="undefined" && <Navbar.Brand><strong>EmilBerbakov.com</strong></Navbar.Brand>}
-            {jwt!==null && typeof jwt!=="undefined" && <Navbar.Brand>Welcome back!</Navbar.Brand>}
+            {jwt!==null && typeof jwt!=="undefined" && <Navbar.Brand>Welcome back, {payloadjson.firstname}!</Navbar.Brand>}
               {/*<Navbar.Brand>EmilBerbakov.com</Navbar.Brand>*/}
               <Navbar.Toggle aria-controls='navbar-main'></Navbar.Toggle>
               <Navbar.Collapse id="navbar-main">
@@ -85,7 +90,7 @@ render(){
                       <LinkContainer to="aboutme">
                         <Nav.Link>About</Nav.Link>
                       </LinkContainer>
-                  <NavDropdown title="Projects" id="navbar-projects-dropdown" menuVariant='dark'>
+                      <NavDropdown title="Projects" id="navbar-projects-dropdown" menuVariant='dark'>
                     <LinkContainer to="/libraryDB">
                       <NavDropdown.Item>Library Database</NavDropdown.Item>  
                     </LinkContainer>
@@ -101,24 +106,34 @@ render(){
                   <Button onClick={switchTheme} variant='dark'>Switch to {theme === 'light' ? 'Dark' : 'Light'} Theme</Button>  
                   */}
         
-                  {jwt!==null && typeof jwt!=="undefined" && <><LinkContainer to="#"><Nav.Link onClick={(event)=>this.handleLogout(event)}>Logout</Nav.Link></LinkContainer> <LinkContainer to="/profile"><Nav.Link>My Profile</Nav.Link></LinkContainer></>}
+                  {jwt!==null && typeof jwt!=="undefined" && 
+                  <><LinkContainer to="#"><Nav.Link onClick={(event)=>this.handleLogout(event)}>Logout</Nav.Link></LinkContainer> 
+                  {/*<LinkContainer to="/profile"><Nav.Link>My Profile</Nav.Link></LinkContainer>*/}
+                  <NavDropdown title="Profile" id="navbar-profile-dropdown" menuVariant='dark'>
+                    <LinkContainer to='/mylibrary'>
+                      <NavDropdown.Item>My Library</NavDropdown.Item>
+                    </LinkContainer>
+                  </NavDropdown>
+                  </>
+                  }
         
                   </Nav>
               </Navbar.Collapse>
             </Container>
           </Navbar> 
         </div>
-        {error!==null && <ErrorToast errorMsg={error}/>}
+        
         <Routing/>
         <div id="footer">
         <Navbar bg='dark' fixed='bottom' className="px-3">
-          <Navbar.Text className='text-white'>Designed and built with ReactJS and Bootstrap.  There's some C# running in the background, too.</Navbar.Text>
+          <Navbar.Text className='text-white'>Designed and built with React.JS and Bootstrap.  There's some C# running in the background, too.</Navbar.Text>
         </Navbar>
         
         </div>
         
     </div>
-    
+    {error!==null && <ErrorToast errorMsg={error}/>}
+    </>
     )
       }
 }
@@ -135,11 +150,14 @@ function Routing(){
   <Route path="/aboutme" element={<AboutMe/>}/>
   <Route path="/libraryDB" element={<LibraryDB/>}/>
   <Route path='/profile' element={<Profile/>}/>
+  <Route path='/mylibrary' element={<MyLibrary/>}/>
   <Route path="*" element={<ErrorPage/>}/>
 </Routes>
 </AnimatePresence>
 </div>
   )
 }
+
+
 
 export default App;

@@ -6,17 +6,21 @@ import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
+const queryClient=new QueryClient();
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
 
 root.render(
+  <QueryClientProvider client={queryClient}>
   <BrowserRouter basename={baseUrl}>
     
     <App/>
     
   </BrowserRouter>
+  </QueryClientProvider>
   
   );
 

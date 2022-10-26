@@ -1,59 +1,63 @@
 import React, { Component } from 'react'
 import { Table } from 'react-bootstrap';
 
-var myHeaders=new Headers();
-myHeaders.append("Content-Type","application/json");
 
-var raw=JSON.stringify({
-    "jwt":sessionStorage.getItem("JWT")
-});
 
-var requestOptions = {
-    method:"POST",
-    header:myHeaders,
-    body:raw,
-    redirect:"follow"
-};
 
 
  //Todo: figure this whole thing out
- async function validate(requestOptions,props) {
+ async function validate(jwt) {
     try{
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+            "jwt":  jwt
+        });
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+          };
         const res =  await fetch("api/librarydb/mylibrary",requestOptions)
-        let result= await res.text()
+        let status=res.status;
+        if (status==200){
+        let result;
+        result= await res.text()
 
         if (result=="2"){
             sessionStorage.clear();
             sessionStorage.setItem("Error","There was an error with your credentials.  Please try again.");
-            
+            window.location.replace("/home");
         }
-        //this is where I'm hitting.  Look into this tomorrow.
-        else if (result="3"){
+        
+        if (result=="3"){
             sessionStorage.clear();
             sessionStorage.setItem("Error","Credentials Expired.  Please log in again.");
+            window.location.replace("/home");
         }
         //return result;
-        switch(result){
-            case "2":
-            case "3":
-            case "0":
-                window.location.replace("/home");
-                break;
-            default:
-                //console.log("eee");
-                result=res.text();
-                props.setItem({resultArray:JSON.parse(result)});
-                myLibrary(props);
-                //here we will point to the table constructor function
-                break;
-        };
+        else{
+            //props.resultArray=JSON.parse(result);
+            //return props;
+            sessionStorage.setItem("Library",JSON.parse(result));
+        }     
+    }
+    else{
+        console.log(status)
+        sessionStorage.clear();
+        sessionStorage.setItem("Error","There was an issue with the login process.  Please try again.")
+        window.location.replace("/home")
+    }
+
         
     }
     catch{
         sessionStorage.clear();
         sessionStorage.setItem("Error","There was an unforseen error.  Please try again.");
         window.location.replace("/home")
-        //return result;
     }
 
  }
@@ -63,26 +67,56 @@ export class Profile extends Component {
     constructor(props){
         super(props);
         this.state={resultArray:[]};
-        this.componentDidMount=this.componentDidMount.bind(this);
         this.componentDidUpdate=this.componentDidUpdate.bind(this);
+        
     }
     componentDidMount() {
-         var result=validate(requestOptions,this.state);
+         var jwt=sessionStorage.getItem("JWT");
+         if (jwt==null||jwt==undefined){
+            window.location.replace("/home")
+         };
+         var result=validate(jwt);
+         if (result!==sessionStorage.getItem("Library")){
+             sessionStorage.setItem("Library",result)
+             window.location.reload();
+     }
      }
 
      componentDidUpdate(){
-        var result=validate(requestOptions,this.state);
+        var jwt=sessionStorage.getItem("JWT");
+        if (jwt==null||jwt==undefined){
+            window.location.replace("/home")
+         };
+        var result=validate(jwt);
+        if (result!==sessionStorage.getItem("Library")){
+            sessionStorage.setItem("Library",result)
+            window.location.reload();
+    }
      }
-
+  
   render() {
+    var jwt=sessionStorage.getItem("JWT");
+    var claims=sessionStorage.getItem("Payload");
+    var library=sessionStorage.getItem("Library");
+    console.log(claims)
+    if (jwt!==null && jwt!==undefined){
     return (
-      <div>Profile</div>
+       <>
+      <div>Welcome back!</div>
+      {library!==null && typeof library!==undefined && <MyLibrary props={library}/>}
+      </>
     )
+    }
   }
 }
 
-function myLibrary(props){
-    let tb_data=props.props.resultArray.map((book)=>{
+
+
+function MyLibrary(){
+    var library=sessionStorage.getItem("Library");
+    //console.log(library)
+
+    let tb_data=library.map((book)=>{
         return(
             <tr key={book.EDITION_ID}>
                 <td>{book.INFO.TITLE}

@@ -87,6 +87,7 @@ namespace emilberbakovdotnetitsdotcom.Controllers
         }
 
         [HttpPost("mylibrary")]
+
         public string myLibrary(UserJWTModel token)
         {
             bool valid=TokenValidation(token.jwt);
@@ -108,18 +109,26 @@ namespace emilberbakovdotnetitsdotcom.Controllers
                     SelectCommand=cmd
                 };
                 dataAdapter.Fill(dataSet);
-                output=dataSet.Tables[0].Rows[0][0].ToString();
-                if (output==null){
+                List<string> outputList = new List<string>();
+                for(int i=0;i<dataSet.Tables[0].Rows.Count;i++){
+                    outputList.Add(dataSet.Tables[0].Rows[i][0].ToString());
+                }
+
+                if (outputList==null){
                     output=2.ToString();
+                }
+                else{
+                    output=string.Join("",outputList);
                 }
                 }
                 catch{
-                    output=2.ToString();
+                    output=3.ToString();
                 }
+
                 return output;
             }
             else {
-                return 2.ToString();
+                return 4.ToString();
             }
             
         }

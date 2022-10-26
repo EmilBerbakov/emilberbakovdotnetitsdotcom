@@ -26,6 +26,7 @@ namespace emilberbakovdotnetitsdotcom.Controllers
         {
             _configuration=configuration;
         }
+
         public static LoginModel returningUser= new LoginModel();
         public static UserRegistrationModel newUser = new UserRegistrationModel();
 
@@ -110,6 +111,9 @@ namespace emilberbakovdotnetitsdotcom.Controllers
     {
         string output=string.Empty;
         string resultstring=string.Empty;
+
+
+
         try{
             
             SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DefaultConnection").ToString());
