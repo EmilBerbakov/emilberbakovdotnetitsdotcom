@@ -13,7 +13,6 @@ import {AnimatePresence} from "framer-motion"
 import { useLocation } from 'react-router-dom';
 import LoginForm from "./pagecomponents/LoginForm";
 import ErrorToast from './pagecomponents/ErrorToast';
-import Profile from './Pages/Profile';
 import MyLibrary from './Pages/MyLibrary';
 
 
@@ -149,7 +148,6 @@ function Routing(){
   <Route path="/home" element={<Home/>}/>
   <Route path="/aboutme" element={<AboutMe/>}/>
   <Route path="/libraryDB" element={<LibraryDB/>}/>
-  <Route path='/profile' element={<Profile/>}/>
   <Route path='/mylibrary' element={<MyLibrary/>}/>
   <Route path="*" element={<ErrorPage/>}/>
 </Routes>
