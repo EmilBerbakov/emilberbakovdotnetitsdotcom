@@ -156,6 +156,7 @@ namespace emilberbakovdotnetitsdotcom.Controllers
 
         //Validate and read the JSON token
         //then run the stored SQL procedure that returns the user's library.
+    //TODO - Create edit API.  This API will take in an enumerable  JSON array, where each line will indicate: the book being edited, the read status, the ownership status, the number of copies
     }
 }
 
