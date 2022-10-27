@@ -1,9 +1,9 @@
 import React from "react";
-import { Button, Table } from "react-bootstrap";
+import { Button, Container, Form, Table,Spinner } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import {useQuery} from "react-query";
 import PageAnimation from "./PageAnimation";
-import { OwnershipDropDown,ReadDropDown } from '../pagecomponents/LibraryEditButtons';
+import { OwnershipDropDown,ReadDropDown, ReadList,OwnershipList} from '../pagecomponents/LibraryEditButtons';
 
 
 export default function MyLibrary() {
@@ -39,11 +39,15 @@ export default function MyLibrary() {
 
 
 if (status==="loading"){
+    console.log(status)
+    return(
     <PageAnimation>
     <div>
-        Loading...
+        Loading... <Spinner animation="border" variant="light" />
     </div>
     </PageAnimation>
+    )
+    
 }
 else if (status==="error"){
     sessionStorage.clear();
@@ -75,14 +79,16 @@ else if (status==="success"){
         let tb_data=dataJSON.map(
         (book)=>{
             return(
+                
                 <tr key={book.EDITION_ID}>
                     <td>{book.INFO.TITLE}
                     {book.INFO.SUBTITLE!==null && book.INFO.SUBTITLE!==undefined ? ": "+book.INFO.SUBTITLE: ""}
                     </td>
                     <td>{book.INFO.ISBN_13}</td>
                     <td>{book.INFO.ISBN_10}</td>
+                    <td>{book.EDITION_ID}</td>
                     <td>{book.INFO.AUTHOR_NAMES}</td>
-                    {jwt!==null && typeof jwt!=="undefined" && <><OwnershipDropDown BookID={book.EDITION_ID}/><ReadDropDown BookID={book.EDITION_ID}/></>}
+                    {jwt!==null && typeof jwt!=="undefined" && <><ReadList BookID={book}/><OwnershipList BookID={book}/><td><Form.Control type='number' min='0' defaultValue={book.INFO.BOOK_NUM}/></td></>}
                 </tr>
             )
         }
@@ -94,23 +100,27 @@ else if (status==="success"){
             <title>My Library</title>
         </Helmet>
         <PageAnimation>
-        <h4>{payloadjson.firstname}'s Library</h4>
-        <div>
+        <h4><center>{payloadjson.firstname}'s Library</center></h4>
+        <Container>
+            <Form>
             <Table variant='dark' responsive>
                 <thead>
                 <tr>
                     <th>Title</th>
                     <th>ISBN-13</th>
                     <th>ISBN-10</th>
+                    <th>Open Library ID</th>
                     <th>Authors&#40;s&#41;</th>
-                    {jwt!==null && typeof jwt!=="undefined" &&<><th>Ownership Status</th><th>Read Status</th></>}
+                    
+                    {jwt!==null && typeof jwt!=="undefined" &&<><th>Ownership Status</th><th>Read Status</th><th>Number of Copies</th></>}
                 </tr>
                 </thead>
                 <tbody>
                     {tb_data}
                 </tbody>
             </Table>
-        </div>
+            </Form>
+            </Container>
         </PageAnimation>
         </>
     )
