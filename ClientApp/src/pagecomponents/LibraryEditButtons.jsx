@@ -5,7 +5,7 @@ import { Dropdown,DropdownButton, Form} from "react-bootstrap";
 function OwnershipDropDown(Book){
     return(
         <td>
-    <DropdownButton id={`${Book.EDITON}-OwnershipDropDown`} variant='dark' menuVariant="dark" title='Ownership Status' size='sm'>
+    <DropdownButton id={`${Book.EDITON_ID}-OwnershipDropDown`} variant='dark' menuVariant="dark" title='Ownership Status' size='sm'>
         <Dropdown.Item type='button' value='N/A'>N/A</Dropdown.Item>
         <Dropdown.Item type='button' value='WANT'>Want</Dropdown.Item>
         <Dropdown.Item type='button' value='OWN'>Own</Dropdown.Item>
@@ -18,7 +18,7 @@ function ReadDropDown(Book){
 return(
     <>
 <td>
-<DropdownButton id={`${Book.EDITON}-ReadDropDown`} variant='dark' menuVariant="dark" title='Read Status' size='sm'>
+<DropdownButton id={`${Book.EDITON_ID}-ReadDropDown`} variant='dark' menuVariant="dark" title='Read Status' size='sm'>
     <Dropdown.Item type='button' value='N/A'>N/A</Dropdown.Item>
     <Dropdown.Item type='button' value='READ'>Read</Dropdown.Item>
     <Dropdown.Item type='button' value='READING'>Reading</Dropdown.Item>
@@ -33,11 +33,12 @@ return(
 function ReadList(Book){
     return(
     <td>
-                <select id={`${Book.EDITON}-ReadList`} className='form-control'>
-                    <option value="N/A">N/A</option>
-                    <option value="READ">Read</option>
-                    <option value="READING">Reading</option>
-                    <option value="TBR">TBR</option>
+                <select id={`${Book.Book.EDITION_ID}-ReadList`} defaultValue={Book.Book.INFO.READ_STATUS??"N/A"} className='form-control'>
+                    <option value="N/A" disabled>N/A</option>
+                    <option value="1">Read</option>
+                    <option value="2">Reading</option>
+                    <option value="3">TBR</option>
+                    <option value="4">DNF</option>
                 </select>
     </td>
     )
@@ -48,10 +49,10 @@ function ReadList(Book){
 function OwnershipList(Book){
     return(
         <td>
-            <select id={`${Book.EDITON}-OwnershipList`} className='form-control'>
-                <option value="N/A">N/A</option>
-                <option value='WANT'>Want</option>
-                <option value='OWN'>Own</option>
+            <select id={`${Book.Book.EDITION_ID}-OwnershipList`} defaultValue={Book.Book.INFO.OWNERSHIP_STATUS??"N/A"} className='form-control'>
+                <option value="N/A" disabled>N/A</option>
+                <option value='1'>Want</option>
+                <option value='2'>Own</option>
             </select>
         </td>
     )

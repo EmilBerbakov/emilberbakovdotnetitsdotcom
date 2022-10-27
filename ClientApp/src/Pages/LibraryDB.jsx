@@ -162,7 +162,7 @@ if (props.props.resultArray.length>0 && props.props.resultArray[0]!=='No results
                 <td>{book.INFO.ISBN_13}</td>
                 <td>{book.INFO.ISBN_10}</td>
                 <td>{book.INFO.AUTHOR_NAMES}</td>
-                {jwt!==null && typeof jwt!=="undefined" && <><OwnershipDropDown BookID={book.EDITION_ID}/><ReadDropDown BookID={book.EDITION_ID}/></>}
+                {jwt!==null && typeof jwt!=="undefined" && <><OwnershipDropDown Book={book}/><ReadDropDown Book={book}/></>}
             </tr>
         )
     })

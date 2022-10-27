@@ -39,11 +39,11 @@ export default function MyLibrary() {
 
 
 if (status==="loading"){
-    console.log(status)
     return(
     <PageAnimation>
-    <div>
+    <div><center>
         Loading... <Spinner animation="border" variant="light" />
+        </center>
     </div>
     </PageAnimation>
     )
@@ -88,12 +88,15 @@ else if (status==="success"){
                     <td>{book.INFO.ISBN_10}</td>
                     <td>{book.EDITION_ID}</td>
                     <td>{book.INFO.AUTHOR_NAMES}</td>
-                    {jwt!==null && typeof jwt!=="undefined" && <><ReadList BookID={book}/><OwnershipList BookID={book}/><td><Form.Control type='number' min='0' defaultValue={book.INFO.BOOK_NUM}/></td></>}
+                    {jwt!==null && typeof jwt!=="undefined" && <><ReadList Book={book}/><OwnershipList Book={book}/><td><Form.Control type='number' min='0' defaultValue={book.INFO.BOOK_NUM}/></td></>}
                 </tr>
             )
         }
     )
     const payloadjson=JSON.parse(sessionStorage.getItem("Payload"))
+        const handleSubmit=(e)=>{
+        e.preventDefault();
+    }
     return(
         <>
         <Helmet>
@@ -112,13 +115,14 @@ else if (status==="success"){
                     <th>Open Library ID</th>
                     <th>Authors&#40;s&#41;</th>
                     
-                    {jwt!==null && typeof jwt!=="undefined" &&<><th>Ownership Status</th><th>Read Status</th><th>Number of Copies</th></>}
+                    {jwt!==null && typeof jwt!=="undefined" &&<><th>Read Status</th><th>Ownership Status</th><th>Number of Copies</th></>}
                 </tr>
                 </thead>
                 <tbody>
                     {tb_data}
                 </tbody>
             </Table>
+            <Button type='submit' variant="dark" onSubmit={handleSubmit}>Save Changes</Button>
             </Form>
             </Container>
         </PageAnimation>
