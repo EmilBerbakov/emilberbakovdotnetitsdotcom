@@ -1,5 +1,5 @@
 import React from "react";
-import { Dropdown, DropdownButton, Form } from "react-bootstrap";
+import { Dropdown, DropdownButton, Button, Form } from "react-bootstrap";
 
 //! DEPRECATED
 function OwnershipDropDown(Book) {
@@ -25,6 +25,13 @@ function OwnershipDropDown(Book) {
     </td>
   );
 }
+const handleEdit = async (e) => {
+  e.preventDefault();
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  const formData = new FormData(document.querySelector("form"));
+  console.table(formData);
+};
 
 //! DEPERECATED
 function ReadDropDown(Book) {
@@ -112,4 +119,25 @@ const handleSelect = () => {
   submitButton.disabled = false;
 };
 
-export { OwnershipDropDown, ReadDropDown, ReadList, OwnershipList };
+function SubmitButton() {
+  return (
+    <Button
+      type="submit"
+      variant="dark"
+      disabled
+      style={{ display: "none" }}
+      id="submitButton"
+    >
+      Save Changes
+    </Button>
+  );
+}
+
+export {
+  OwnershipDropDown,
+  ReadDropDown,
+  ReadList,
+  OwnershipList,
+  SubmitButton,
+  handleEdit,
+};

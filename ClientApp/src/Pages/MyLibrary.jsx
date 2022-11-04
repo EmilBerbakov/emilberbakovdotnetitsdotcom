@@ -3,7 +3,12 @@ import { Button, Container, Form, Table, Spinner } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import PageAnimation from "./PageAnimation";
-import { ReadList, OwnershipList } from "../pagecomponents/LibraryEditButtons";
+import {
+  ReadList,
+  OwnershipList,
+  SubmitButton,
+  handleEdit,
+} from "../pagecomponents/LibraryEditButtons";
 
 export default function MyLibrary() {
   const jwt = sessionStorage.getItem("JWT");
@@ -80,7 +85,6 @@ export default function MyLibrary() {
         window.location.replace("/home");
         break;
       default:
-        
         let dataJSON = JSON.parse(data);
         let tb_data = dataJSON.map((book) => {
           return (
@@ -97,8 +101,8 @@ export default function MyLibrary() {
               <td>{book.INFO.AUTHOR_NAMES}</td>
               {jwt !== null && typeof jwt !== "undefined" && (
                 <>
-                  <ReadList Book={book}/>
-                  <OwnershipList Book={book}/>
+                  <ReadList Book={book} />
+                  <OwnershipList Book={book} />
                   <td>
                     <Form.Control
                       type="number"
@@ -112,9 +116,6 @@ export default function MyLibrary() {
           );
         });
         const payloadjson = JSON.parse(sessionStorage.getItem("Payload"));
-        const handleSubmit = (e) => {
-          e.preventDefault();
-        };
         return (
           <>
             <Helmet>
@@ -125,7 +126,7 @@ export default function MyLibrary() {
                 <center>{payloadjson.firstname}'s Library</center>
               </h4>
               <Container>
-                <Form>
+                <Form id="EditLibrary" onSubmit={handleEdit(e, "EditLibrary")}>
                   <Table variant="dark" responsive>
                     <thead>
                       <tr>
@@ -147,16 +148,7 @@ export default function MyLibrary() {
                     <tbody>{tb_data}</tbody>
                   </Table>
                   {/* TODO: hide the button until there is a click action in the buttons in tb_data.*/}
-                  <Button
-                    type="submit"
-                    variant="dark"
-                    onClick={handleSubmit}
-                    disabled
-                    style={{ display: "none" }}
-                    id="submitButton"
-                  >
-                    Save Changes
-                  </Button>
+                  <SubmitButton />
                 </Form>
               </Container>
             </PageAnimation>
