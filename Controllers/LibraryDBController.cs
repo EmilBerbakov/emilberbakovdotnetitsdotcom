@@ -157,8 +157,29 @@ namespace emilberbakovdotnetitsdotcom.Controllers
         //Validate and read the JSON token
         //then run the stored SQL procedure that returns the user's library.
     //TODO - Create edit API.  This API will take in an enumerable  JSON array, where each line will indicate: the book being edited, the read status, the ownership status, the number of copies
+    [HttpPost ("editlibrary")]
+    public string editlibrary(EditLibrary editLibrary){
+        //TODO - enumerate through each line in editLibrary, then perform the edit stored proc on the user's library
+        string library=editLibrary.LIBRARY;
+        SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DefaultConnection").ToString());
+        SqlCommand cmd=new SqlCommand("Libraries.USERLIBRARYEDIT",con);
+        cmd.CommandType=System.Data.CommandType.StoredProcedure;
+        cmd.Parameters.Add("@TABLENAME",SqlDbType.NVarChar,150).Value=editLibrary.LIBRARY;
+        con.Open();
+        int rowNum=0;
+        foreach (var item in editLibrary.EDITLIBRARY)
+        {
+            //TODO - grab each value in the EDITLIBRARY list and then run a stored procedure to edit the specific line in the user's library
+            //TODO - write the stored procedure.  It will do the following: set the columns under EDITION_ID to the appropriate values    
+            cmd.Parameters.Clear();
+            cmd.Parameters.Add("@EDITION_ID",SqlDbType.VarChar,50).Value=item.EDITION_ID;
+            cmd.Parameters.Add("@OWNERSHIP_STATUS",SqlDbType.Int).Value=int.Parse(item.OWNERSHIP_STATUS);
+            cmd.Parameters.Add("@READ_STATUS",SqlDbType.Int).Value=int.Parse(item.READ_STATUS);
+            cmd.Parameters.Add("@BOOK_NUM",SqlDbType.Int).Value=int.Parse(item.BOOK_NUM);
+            rowNum=rowNum+cmd.ExecuteNonQuery();
+        }
+        con.Close();
+        return rowNum.ToString();
+    }
     }
 }
-
-
-
