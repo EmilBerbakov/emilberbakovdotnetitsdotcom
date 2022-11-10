@@ -12,8 +12,9 @@ import {
 import { Helmet } from "react-helmet";
 import PageAnimation from "./PageAnimation";
 import {
-  OwnershipDropDown,
-  ReadDropDown,
+SubmitButton,
+handleEdit,
+BookForm
 } from "../pagecomponents/LibraryEditButtons";
 const TITLE = "Library Database";
 
@@ -252,8 +253,7 @@ function LibraryDBResults(props) {
           <td>{book.INFO.AUTHOR_NAMES}</td>
           {jwt !== null && typeof jwt !== "undefined" && (
             <>
-              <OwnershipDropDown Book={book} />
-              <ReadDropDown Book={book} />
+            <BookForm Book={book}/>
             </>
           )}
         </tr>
@@ -271,8 +271,9 @@ function LibraryDBResults(props) {
                 <th>Authors&#40;s&#41;</th>
                 {jwt !== null && typeof jwt !== "undefined" && (
                   <>
-                    <th>Ownership Status</th>
-                    <th>Read Status</th>
+                  <th>Read Status</th> 
+                  <th>Ownership Status</th>
+                  <th>Number of Copies</th>
                   </>
                 )}
               </tr>

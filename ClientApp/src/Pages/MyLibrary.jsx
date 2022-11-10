@@ -4,11 +4,13 @@ import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import PageAnimation from "./PageAnimation";
 import {
-  ReadList,
-  OwnershipList,
   SubmitButton,
   handleEdit,
+  BookForm
 } from "../pagecomponents/LibraryEditButtons";
+
+var submitData= new Map();
+
 
 export default function MyLibrary() {
   const jwt = sessionStorage.getItem("JWT");
@@ -99,19 +101,13 @@ export default function MyLibrary() {
               <td>{book.INFO.ISBN_10}</td>
               <td>{book.EDITION_ID}</td>
               <td>{book.INFO.AUTHOR_NAMES}</td>
-              {jwt !== null && typeof jwt !== "undefined" && (
-                <>
-                  <ReadList Book={book} />
-                  <OwnershipList Book={book} />
-                  <td>
-                    <Form.Control
-                      type="number"
-                      min="0"
-                      defaultValue={book.INFO.BOOK_NUM}
-                    />
-                  </td>
-                </>
-              )}
+              {jwt !== null && typeof jwt !== "undefined" &&
+                (
+              <>
+             <BookForm Book={book}  /> 
+             </>
+                )
+            }
             </tr>
           );
         });
@@ -126,7 +122,6 @@ export default function MyLibrary() {
                 <center>{payloadjson.firstname}'s Library</center>
               </h4>
               <Container>
-                <Form id="EditLibrary" onSubmit={handleEdit(e, "EditLibrary")}>
                   <Table variant="dark" responsive>
                     <thead>
                       <tr>
@@ -148,6 +143,8 @@ export default function MyLibrary() {
                     <tbody>{tb_data}</tbody>
                   </Table>
                   {/* TODO: hide the button until there is a click action in the buttons in tb_data.*/}
+
+                <Form id="EditLibrary" onSubmit={handleEdit}>
                   <SubmitButton />
                 </Form>
               </Container>
