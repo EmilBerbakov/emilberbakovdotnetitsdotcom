@@ -2,17 +2,27 @@ import React from "react";
 import { Dropdown, DropdownButton, Button, Form } from "react-bootstrap";
 
 
-//var submitData=new Map();
+var submitData=new Map();
 const handleEdit = async (e) => {
   e.preventDefault();
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 };
 
-const handleSelect = () => {
+const handleSelect = (Book,val,statType) => {
   const submitButton = document.getElementById("submitButton");
   submitButton.style.display = "initial";
   submitButton.disabled = false; 
+  console.log(val);
+  console.log(Book)
+  if (submitData.has(Book)){
+    submitData.get(Book)[statType]=val;
+    console.table(submitData);
+  }
+  else{
+    submitData.set(Book,{"EDITION_ID":Book, [statType]:val})
+    console.table(submitData);
+  }
   //submitData.set(Book.Book.EDITION_ID,"test");
   //console.log(Book)
   //console.table(submitData); 
@@ -61,7 +71,7 @@ function ReadList(Book) {
         id={`${Book.Book.EDITION_ID}-ReadList`}
         defaultValue={Book.Book.INFO.READ_STATUS ?? "N/A"}
         className="form-control"
-        onChange={handleSelect}
+        onChange={handleSelect(Book.Book.EDITION_ID,this.value)}
       >
         <option value="N/A" disabled>
           N/A
@@ -127,10 +137,10 @@ function BookForm(Book){
     <td>
       <select
         id={`${Book.Book.EDITION_ID}-ReadList`}
-        name={`${Book.Book.EDITION_ID}-ReadList`}
+        name="READ_STATUS"
         defaultValue={Book.Book.INFO.READ_STATUS ?? "N/A"}
         className="form-control"
-        onChange={handleSelect}
+        onChange={(e)=>handleSelect(Book.Book.EDITION_ID,e.target.value,e.target.name)}
         //onClick={()=> handleData(Book,this)}
         form="EditLibrary"
       >
@@ -147,10 +157,10 @@ function BookForm(Book){
     <td>
       <select
         id={`${Book.Book.EDITION_ID}-OwnershipList`}
-        name={`${Book.Book.EDITION_ID}-OwnershipList`}
+        name="OWNERSHIP_STATUS"
         defaultValue={Book.Book.INFO.OWNERSHIP_STATUS ?? "N/A"}
         className="form-control"
-        onChange={handleSelect}
+        onChange={(e)=>handleSelect(Book.Book.EDITION_ID,e.target.value,e.target.name)}
         form="EditLibrary"
       >
         <option value="N/A" disabled>
@@ -165,10 +175,10 @@ function BookForm(Book){
       <Form.Control
         type="number"
         id={`${Book.Book.EDITION_ID}-BookCount`}
-        name={`${Book.Book.EDITION_ID}-BookCount`}
+        name="BOOK_NUM"
         min="0"
         defaultValue={Book.Book.INFO.BOOK_NUM ?? "0"}
-        onChange={handleSelect}
+        onChange={(e)=>handleSelect(Book.Book.EDITION_ID,e.target.value,e.target.name)}
         form="EditLibrary"
       />
     </td>
