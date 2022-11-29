@@ -13,7 +13,7 @@ import { Helmet } from "react-helmet";
 import PageAnimation from "./PageAnimation";
 import {
 SubmitButton,
-handleEdit,
+HandleEdit,
 BookForm
 } from "../pagecomponents/LibraryEditButtons";
 const TITLE = "Library Database";
@@ -280,6 +280,9 @@ function LibraryDBResults(props) {
             </thead>
             <tbody>{tb_data}</tbody>
           </Table>
+          <Form id="EditLibrary" onSubmit={HandleEdit}>
+            <SubmitButton/>
+          </Form>
         </div>
       </>
     );

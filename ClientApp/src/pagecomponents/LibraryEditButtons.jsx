@@ -1,50 +1,56 @@
 import React from "react";
-import { Dropdown, DropdownButton, Button, Form } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
+const payloadjson=JSON.parse(sessionStorage.getItem("Payload"));
+var submitData = new Map();
 
-
-var submitData=new Map();
-const handleEdit = async (e) => {
+const HandleEdit = async (e) => {
   e.preventDefault();
+  submitData.forEach(function (currentValue, currentIndex) {
+    let READLIST = document.getElementById(`${currentIndex}-ReadList`).value;
+    let OWNLIST = document.getElementById(
+      `${currentIndex}-OwnershipList`
+    ).value;
+    let BOOKNUM = document.getElementById(`${currentIndex}-BookCount`).value;
+    submitData.set(currentIndex, {
+      EDITION_ID: currentIndex,
+      OWNERSHIP_STATUS: OWNLIST,
+      READ_STATUS: READLIST,
+      BOOK_NUM: BOOKNUM,
+    });
+  });
+
+  let submitDataArray = [...submitData.values()];
+  let submitDataJSON = JSON.stringify(submitDataArray);
+  console.log(submitDataJSON);
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
-};
 
-const handleSelect = (Book,val,statType) => {
+  var requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: JSON.stringify({"LIBRARY":payloadjson.library,"EDITLIBRARY":submitDataArray}),
+    redirect: "follow",
+  };
+  const res = await fetch("api/librarydb/editlibrary", requestOptions);
+  if (res.ok){
+    window.location.reload();
+  }
+  //TODO - check res.code.  If res.ok, return res.text(); this will be the number of affected rows.
+  //TODO - after, reload the page, and have a Toast indicating how many books were edited.
+};
+/**
+ *
+ * @param {Object} Book Represents the book that is being edited
+ * @param {Object} val This can either be a string or int.  It represents the value that you're changing for the book to be in your library
+ * @param {String} statType This represents the specific attribute you are editing, such as if you have read the book
+ */
+const handleSelect = (Book) => {
   const submitButton = document.getElementById("submitButton");
   submitButton.style.display = "initial";
-  submitButton.disabled = false; 
-  console.log(val);
-  console.log(Book)
-  if (submitData.has(Book)){
-    submitData.get(Book)[statType]=val;
-    console.table(submitData);
-  }
-  else{
-    submitData.set(Book,{"EDITION_ID":Book, [statType]:val})
-    console.table(submitData);
-  }
-  //submitData.set(Book.Book.EDITION_ID,"test");
-  //console.log(Book)
-  //console.table(submitData); 
+  submitButton.disabled = false;
+  submitData.set(Book, []);
 };
 
-//! instead of trying to be tricky, I can instead initialize the map by setting it up with the default values, then editing the data using this function
-//! The user will only be able to send the data if they trigger the handleSelect option.
-//! I don't like this because each book would write to the database.
-//* It looks like we're going to have to handle all of this in a unique way.
-//* I can't have parts of a form within a table that's nested in a form.
-//* Maybe, we make a function in here that makes a form all in one.  Then, we FormData.append as an onChange
-/*
-const handleData=(Book,formStuff)=>{
-  if (submitData.has(Book.Book.EDITION_ID)){
-    submitData.get(Book.Book.EDITION_ID).push(formStuff.value)
-    console.table(submitData);
-  }
-  else{
-    submitData.set(Book.Book.EDITION_ID,[formStuff.value])
-  }
-}
-*/
 function SubmitButton() {
   return (
     <Button
@@ -58,138 +64,74 @@ function SubmitButton() {
     </Button>
   );
 }
-//!DEPRECATED
+
 /**
- * Option List of all Reading Options possible for a book.
- * @param {Object} Book Line of return value from api/librarydb/mylibrary
- * @returns Option List for the Book in the user's library.  Default value for the Option List is whatever the user previously recorded
- */
-function ReadList(Book) {
-  return (
-    <td>
-      <select
-        id={`${Book.Book.EDITION_ID}-ReadList`}
-        defaultValue={Book.Book.INFO.READ_STATUS ?? "N/A"}
-        className="form-control"
-        onChange={handleSelect(Book.Book.EDITION_ID,this.value)}
-      >
-        <option value="N/A" disabled>
-          N/A
-        </option>
-        <option value="1">Read</option>
-        <option value="2">Reading</option>
-        <option value="3">TBR</option>
-        <option value="4">DNF</option>
-      </select>
-    </td>
-  );
-}
-//!DEPRECATED
-/**
- * Option List of all Ownership Options possible for a book.
- * @param {Object} Book Line of return value from api/librarydb/mylibrary
- * @returns Option List of Ownership values for the Book in the user's library.  Default value for the Option List is whatever the user previously recorded
- */
-
-function OwnershipList(Book) {
-  return (
-    <td>
-      <select
-        id={`${Book.Book.EDITION_ID}-OwnershipList`}
-        defaultValue={Book.Book.INFO.OWNERSHIP_STATUS ?? "N/A"}
-        className="form-control"
-        onChange={handleSelect}
-      >
-        <option value="N/A" disabled>
-          N/A
-        </option>
-        <option value="1">Want</option>
-        <option value="2">Own</option>
-      </select>
-    </td>
-  );
-}
-
-
-
-//!DEPRECATED
-function BookCount(Book) {
-  return (
-    <td>
-      <Form.Control
-        type="number"
-        min="0"
-        defaultValue={Book.Book.INFO.BOOK_NUM ?? "0"}
-        onChange={handleSelect}
-      />
-    </td>
-  );
-}
-/**
- * 
+ * Why are we building this like this?
+ * Forms pieces cannot be piecemeal put into table components.
+ * HOWEVER, we can get around this by taking advantage of the form attribute of form elements.
+ * By defining the form we are using these form inputs for, we can actually put the input components outside of the form component and spread throughout the table like we want
  * @param {Object} Book Line of return value from api/librarydb/mylibrary that represents a unique book in the user's library
- * @returns 
+ * @returns Two Select Options that represent the user's read and ownership status and one number input represent the number of copies the user owns / wants
  */
 
-function BookForm(Book){
+function BookForm(Book) {
   return (
     <>
-    <td>
-      <select
-        id={`${Book.Book.EDITION_ID}-ReadList`}
-        name="READ_STATUS"
-        defaultValue={Book.Book.INFO.READ_STATUS ?? "N/A"}
-        className="form-control"
-        onChange={(e)=>handleSelect(Book.Book.EDITION_ID,e.target.value,e.target.name)}
-        //onClick={()=> handleData(Book,this)}
-        form="EditLibrary"
-      >
-        <option value="N/A" disabled>
-          N/A
-        </option>
-        <option value="1">Read</option>
-        <option value="2">Reading</option>
-        <option value="3">TBR</option>
-        <option value="4">DNF</option>
-      </select>
-    </td>
+      <td>
+        <select
+          id={`${Book.Book.EDITION_ID}-ReadList`}
+          name="READ_STATUS"
+          defaultValue={Book.Book.INFO.READ_STATUS ?? "N/A"}
+          className="form-control"
+          onChange={(e) =>
+            handleSelect(Book.Book.EDITION_ID)
+          }
+          form="EditLibrary"
+        >
+          <option value="N/A" disabled>
+            N/A
+          </option>
+          <option value="1">Read</option>
+          <option value="2">Reading</option>
+          <option value="3">TBR</option>
+          <option value="4">DNF</option>
+        </select>
+      </td>
 
-    <td>
-      <select
-        id={`${Book.Book.EDITION_ID}-OwnershipList`}
-        name="OWNERSHIP_STATUS"
-        defaultValue={Book.Book.INFO.OWNERSHIP_STATUS ?? "N/A"}
-        className="form-control"
-        onChange={(e)=>handleSelect(Book.Book.EDITION_ID,e.target.value,e.target.name)}
-        form="EditLibrary"
-      >
-        <option value="N/A" disabled>
-          N/A
-        </option>
-        <option value="1">Want</option>
-        <option value="2">Own</option>
-      </select>
-    </td>
+      <td>
+        <select
+          id={`${Book.Book.EDITION_ID}-OwnershipList`}
+          name="OWNERSHIP_STATUS"
+          defaultValue={Book.Book.INFO.OWNERSHIP_STATUS ?? "N/A"}
+          className="form-control"
+          onChange={(e) =>
+            handleSelect(Book.Book.EDITION_ID)
+          }
+          form="EditLibrary"
+        >
+          <option value="N/A" disabled>
+            N/A
+          </option>
+          <option value="1">Want</option>
+          <option value="2">Own</option>
+        </select>
+      </td>
 
-    <td>
-      <Form.Control
-        type="number"
-        id={`${Book.Book.EDITION_ID}-BookCount`}
-        name="BOOK_NUM"
-        min="0"
-        defaultValue={Book.Book.INFO.BOOK_NUM ?? "0"}
-        onChange={(e)=>handleSelect(Book.Book.EDITION_ID,e.target.value,e.target.name)}
-        form="EditLibrary"
-      />
-    </td>
-</>
-
-  )
+      <td>
+        <Form.Control
+          type="number"
+          id={`${Book.Book.EDITION_ID}-BookCount`}
+          name="BOOK_NUM"
+          min="0"
+          defaultValue={Book.Book.INFO.BOOK_NUM ?? "0"}
+          onChange={(e) =>
+          handleSelect(Book.Book.EDITION_ID)
+          }
+          form="EditLibrary"
+        />
+      </td>
+    </>
+  );
 }
 
-
-export {
-  SubmitButton,
-  handleEdit,
-  BookForm
-};
+export { SubmitButton, BookForm, HandleEdit};

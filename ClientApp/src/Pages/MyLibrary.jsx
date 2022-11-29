@@ -4,13 +4,9 @@ import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import PageAnimation from "./PageAnimation";
 import {
-  SubmitButton,
-  handleEdit,
+  SubmitButton,HandleEdit,
   BookForm
 } from "../pagecomponents/LibraryEditButtons";
-
-var submitData= new Map();
-
 
 export default function MyLibrary() {
   const jwt = sessionStorage.getItem("JWT");
@@ -142,9 +138,8 @@ export default function MyLibrary() {
                     </thead>
                     <tbody>{tb_data}</tbody>
                   </Table>
-                  {/* TODO: hide the button until there is a click action in the buttons in tb_data.*/}
 
-                <Form id="EditLibrary" onSubmit={handleEdit}>
+                <Form id="EditLibrary" onSubmit={HandleEdit}>
                   <SubmitButton />
                 </Form>
               </Container>
