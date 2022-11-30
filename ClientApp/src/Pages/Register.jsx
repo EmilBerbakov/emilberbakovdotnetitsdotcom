@@ -9,7 +9,7 @@ export default function RegisterForm(){
             <title>Register</title>
         </Helmet>
         <PageAnimation>
-            <h4> Create an Account</h4>
+            <h4><center>Create an Account</center></h4>
             <Container>
                 <Form id="register" onSubmit={handleSubmit}>
                     <FormLabel for="firstname">First Name</FormLabel>

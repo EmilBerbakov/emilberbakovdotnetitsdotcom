@@ -19,6 +19,7 @@ import { useLocation } from "react-router-dom";
 import LoginForm from "./pagecomponents/LoginForm";
 import ErrorToast from "./pagecomponents/ErrorToast";
 import MyLibrary from "./Pages/MyLibrary";
+import RegisterForm from "./Pages/Register";
 
 {
   /*
@@ -180,6 +181,8 @@ function Routing() {
           <Route path="/aboutme" element={<AboutMe />} />
           <Route path="/libraryDB" element={<LibraryDB />} />
           <Route path="/mylibrary" element={<MyLibrary />} />
+          {jwt===null && <Route path="/register" element={<RegisterForm/>}/>}
+          {typeof jwt==="undefined" && <Route path="/register" element={<RegisterForm/>}/>}
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </AnimatePresence>

@@ -3,8 +3,6 @@ import {
   Form,
   Button,
   Dropdown,
-  ToastContainer,
-  Toast,
 } from "react-bootstrap";
 import React from "react";
 
@@ -96,7 +94,7 @@ class LoginForm extends React.Component {
               </Button>
             </div>
             <Dropdown.Divider className="mt-3" />
-            <NavDropdown.Item href="#">Create an account</NavDropdown.Item>
+            <NavDropdown.Item href="/register">Create an account</NavDropdown.Item>
           </Form>
           {/*
         {sessionStorage.getItem("userid")!==null & typeof sessionStorage.getItem("userid")!=="undefined" &&  <ToastContainer position='top-center'>
