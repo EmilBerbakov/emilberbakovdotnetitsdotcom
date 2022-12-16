@@ -11,12 +11,38 @@ const HandleEdit = async (e) => {
       `${currentIndex}-OwnershipList`
     ).value;
     let BOOKNUM = document.getElementById(`${currentIndex}-BookCount`).value;
+    let DELETE = document.getElementById(`${currentIndex}-Delete`);
+    if(DELETE!==null){
+    console.log(DELETE.value);
+    if(DELETE.checked){
+      //console.log("This is checked for deletion");
+      submitData.set(currentIndex,{
+      EDITION_ID: currentIndex,
+      OWNERSHIP_STATUS: OWNLIST,
+      READ_STATUS: READLIST,
+      BOOK_NUM: BOOKNUM,
+      DELETE: "Yes"
+      })
+    }  
+    else{
+      submitData.set(currentIndex, {
+      EDITION_ID: currentIndex,
+      OWNERSHIP_STATUS: OWNLIST,
+      READ_STATUS: READLIST,
+      BOOK_NUM: BOOKNUM,
+      DELETE: "No",
+    })
+  }
+  }
+  else{
     submitData.set(currentIndex, {
       EDITION_ID: currentIndex,
       OWNERSHIP_STATUS: OWNLIST,
       READ_STATUS: READLIST,
       BOOK_NUM: BOOKNUM,
-    });
+      DELETE: "No",
+    })
+  }
   });
 
   let submitDataArray = [...submitData.values()];
@@ -33,7 +59,7 @@ const HandleEdit = async (e) => {
   };
   const res = await fetch("api/librarydb/editlibrary", requestOptions);
   if (res.ok){
-    window.location.reload();
+    //window.location.reload();
   }
   //TODO - check res.code.  If res.ok, return res.text(); this will be the number of affected rows.
   //TODO - after, reload the page, and have a Toast indicating how many books were edited.
@@ -50,6 +76,8 @@ const handleSelect = (Book) => {
   submitButton.disabled = false;
   submitData.set(Book, []);
 };
+
+
 
 function SubmitButton() {
   return (
@@ -132,6 +160,24 @@ function BookForm(Book) {
       </td>
     </>
   );
+        }
+  function RemoveBook(Book){
+    //here we will have a checkbox that looks like an x
+    //When it is selected, it will queue up for the book to be deleted from the user's library
+    //when unselected, it will remove itself from the data queue
+    return(
+    <td>
+      <Form.Check
+        //on click, we will check if selected.  If yes, add a piece of info to the json that will tell us to remove the book from the user's library
+        //TODO - adjust EditLibraryModel to account for a "REMOVE" option.
+        //TODO - in LibraryDBController, if "REMOVE" is present, run a stored procedure that deletes the book from the library
+          form="EditLibrary"
+          id={`${Book.Book.EDITION_ID}-Delete`}
+        />
+    </td>
+    )
 }
+  
 
-export { SubmitButton, BookForm, HandleEdit};
+
+export { SubmitButton, BookForm, HandleEdit, RemoveBook};

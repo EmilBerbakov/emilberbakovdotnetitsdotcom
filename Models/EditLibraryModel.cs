@@ -7,6 +7,7 @@ namespace emilberbakovdotnetitsdotcom.Models
    {
     public string EDITION_ID { get; set; }=string.Empty;
 
+    public string DELETE {get;set;}=string.Empty;   
     public string OWNERSHIP_STATUS { get; set; }=string.Empty;
 
     public string READ_STATUS { get; set; }=string.Empty;

@@ -14,7 +14,8 @@ import PageAnimation from "./PageAnimation";
 import {
 SubmitButton,
 HandleEdit,
-BookForm
+BookForm,
+RemoveBook
 } from "../pagecomponents/LibraryEditButtons";
 const TITLE = "Library Database";
 

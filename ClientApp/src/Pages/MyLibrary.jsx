@@ -1,12 +1,15 @@
 import React from "react";
-import { Button, Container, Form, Table, Spinner } from "react-bootstrap";
+import { Button, Container, Form, Table, Spinner, CloseButton } from "react-bootstrap";
 import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import PageAnimation from "./PageAnimation";
 import {
   SubmitButton,HandleEdit,
-  BookForm
+  BookForm,
+  RemoveBook
 } from "../pagecomponents/LibraryEditButtons";
+
+
 
 export default function MyLibrary() {
   const jwt = sessionStorage.getItem("JWT");
@@ -100,7 +103,8 @@ export default function MyLibrary() {
               {jwt !== null && typeof jwt !== "undefined" &&
                 (
               <>
-             <BookForm Book={book}  /> 
+             <BookForm Book={book}/>
+            {true && <RemoveBook Book={book} />}
              </>
                 )
             }
@@ -118,7 +122,7 @@ export default function MyLibrary() {
                 <center>{payloadjson.firstname}'s Library</center>
               </h4>
               <Container>
-                  <Table variant="dark" responsive>
+                  <Table variant="dark" responsive id='librarytable'>
                     <thead>
                       <tr>
                         <th>Title</th>
@@ -132,13 +136,14 @@ export default function MyLibrary() {
                             <th>Read Status</th>
                             <th>Ownership Status</th>
                             <th>Number of Copies</th>
+                            <th>Remove from Library</th>
                           </>
                         )}
                       </tr>
                     </thead>
                     <tbody>{tb_data}</tbody>
                   </Table>
-
+                  {/*<Button id='export' onClick={handleExport}>Export Library to XML </Button>*/}
                 <Form id="EditLibrary" onSubmit={HandleEdit}>
                   <SubmitButton />
                 </Form>

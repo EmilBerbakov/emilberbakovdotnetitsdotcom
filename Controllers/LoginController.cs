@@ -62,8 +62,16 @@ namespace emilberbakovdotnetitsdotcom.Controllers
                     cmd.Parameters.Add("@LNAME", SqlDbType.NVarChar, 50).Value = register.lastName;
                     cmd.Parameters.Add("@PHASH", SqlDbType.VarBinary, -1).Value = passwordHash;
                     cmd.Parameters.Add("@PSALT", SqlDbType.VarBinary, -1).Value = passwordSalt;
+                    cmd.Parameters.Add("@RESULTS",SqlDbType.NVarChar,-1).Direction=ParameterDirection.Output;
                     con.Open();
-                    cmd.BeginExecuteNonQuery();
+                    cmd.ExecuteNonQuery();
+                    string userID=cmd.Parameters["@RESULTS"].Value.ToString();
+                    con.Close();
+                    SqlCommand cmd2 = new SqlCommand("LIBRARIES.LIBRARYCREATION",con);
+                    cmd2.CommandType=System.Data.CommandType.StoredProcedure;
+                    cmd2.Parameters.Add("@USERID",SqlDbType.Int).Value=int.Parse(userID);
+                    con.Open();
+                    cmd2.ExecuteNonQuery();
                     con.Close();
                 }
             }
@@ -131,7 +139,7 @@ namespace emilberbakovdotnetitsdotcom.Controllers
                 cmd.ExecuteNonQuery();
                 con.Close();
                 var result = cmd.Parameters["@RESULTS"].Value;
-                if (result != null)
+                if (result != "")
                 {
                     try
                     {

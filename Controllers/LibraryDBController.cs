@@ -165,16 +165,24 @@ namespace emilberbakovdotnetitsdotcom.Controllers
         cmd.CommandType=System.Data.CommandType.StoredProcedure;
         con.Open();
         int rowNum=0;
+
         foreach (var item in editLibrary.EDITLIBRARY)
         {
-            //TODO - grab each value in the EDITLIBRARY list and then run a stored procedure to edit the specific line in the user's library
-            //TODO - write the stored procedure.  It will do the following: set the columns under EDITION_ID to the appropriate values    
             cmd.Parameters.Clear();
             cmd.Parameters.Add("@TABLENAME",SqlDbType.NVarChar,150).Value=editLibrary.LIBRARY;
             cmd.Parameters.Add("@EDITION_ID",SqlDbType.VarChar,50).Value=item.EDITION_ID;
+            /*
+            if(item.DELETE!="No"){
+                //Here we will run another stored procedure that just deletes the book
+                cmd.Parameters.Add("@DELETE",SqlDbType.Char,3).Value=item.DELETE;
+            }
+            */
+            //TODO - grab each value in the EDITLIBRARY list and then run a stored procedure to edit the specific line in the user's library
+            //TODO - write the stored procedure.  It will do the following: set the columns under EDITION_ID to the appropriate values    
             cmd.Parameters.Add("@OWNERSHIP_STATUS",SqlDbType.Int).Value=int.Parse(item.OWNERSHIP_STATUS);
             cmd.Parameters.Add("@READ_STATUS",SqlDbType.Int).Value=int.Parse(item.READ_STATUS);
             cmd.Parameters.Add("@BOOK_NUM",SqlDbType.Int).Value=int.Parse(item.BOOK_NUM);
+            cmd.Parameters.Add("@DELETE",SqlDbType.Char).Value=item.DELETE;
             rowNum=rowNum+cmd.ExecuteNonQuery();
         }
         con.Close();

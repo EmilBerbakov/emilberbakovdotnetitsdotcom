@@ -53,6 +53,7 @@ const handleSubmit = async(e)=>{
 
     const res = await fetch("api/login/register",requestOptions);
     if (res.ok){
+        
         // if 1, account was created successfully
         // if 2, account was already created
         //if 0, something went wrong
