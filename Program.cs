@@ -16,9 +16,18 @@ options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter(); 
 */
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddDbContext<LibraryDBContext>(options =>
 options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter(); 
+builder.Services.AddCors(
+    options=>options.AddPolicy(
+        name: myAllowSpecificOrigins, policy=>{
+            policy.WithOrigins("http://localhost:4200","http://100.34.89.96:4200","http://192.168.1.14:4200","http://localhost:4200/")
+            .AllowAnyHeader();
+        }
+    )
+);
 
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -47,7 +56,6 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
@@ -63,5 +71,13 @@ app.MapControllerRoute(
 app.MapRazorPages();
 app.MapControllers();
 //app.MapFallbackToFile("index.html");;
-
+/*
+var host = new WebHostBuilder()
+.UseKestrel()
+.UseContentRoot(Directory.GetCurrentDirectory())
+.UseUrls("http://localhost:5000","47.41.132.53:5000")
+.UseStartup<StartupBase>().
+Build();
+*/
+app.UseCors(myAllowSpecificOrigins); 
 app.Run();

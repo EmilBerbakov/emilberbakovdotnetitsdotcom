@@ -71,11 +71,11 @@ namespace emilberbakovdotnetitsdotcom.Controllers
             con.Close();
             string json = cmd.Parameters[jsonOutput].Value.ToString();
             
-            if (json!=null) {
+            if (json!=null & json!=string.Empty) {
                 return json;
             }
             else{
-                return "[{'Result': 'No data found',}]";
+                return "[{" +'"'+"Result"+'"'+": "+'"'+"No results found"+'"'+"}]";
             }
             
 

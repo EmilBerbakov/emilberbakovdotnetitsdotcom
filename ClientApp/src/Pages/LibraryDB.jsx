@@ -237,7 +237,7 @@ function LibraryDBResults(props) {
   //console.log(props.props.max)
   if (
     props.props.resultArray.length > 0 &&
-    props.props.resultArray[0] !== "No results found"
+    props.props.resultArray[0].Result !== "No results found"
   ) {
     console.log(props.props.resultArray);
     let tb_data = props.props.resultArray.map((book) => {
@@ -288,7 +288,7 @@ function LibraryDBResults(props) {
       </>
     );
   } else {
-    return <h4>{props.props.resultArray[0]}</h4>;
+    return <h4>{props.props.resultArray[0].Result}</h4>;
   }
 }
 
